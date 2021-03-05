@@ -4,8 +4,8 @@ This html file placed in your domoticz server will give a value of your domoticz
 
 Instruction:
 * Save getvalue.html file in domoticz/www/views
-* Change the line with $.domoticzurl="http://<IP-of-server>:<port>"; to the correct IP adress and port of your domoticz server
-* Use the following link http://<IP>:<port>/views/getvalue.html?idx=xxx&type=yyy to get the requested value as plain text
+* Change the line with $.domoticzurl="http://IP-of-server:port"; to the correct IP adress and port of your domoticz server
+* Use the following link http://IP-of-server:port/views/getvalue.html?idx=xxx&type=yyy to get the requested value as plain text
   * idx is the idx number of the device
   * type (case sensitive!) is the type of the requested value from the json of your idx device (http://<IP-of-server>:<port>/json.htm?type=devices&rid=idx) like from below example :
 
