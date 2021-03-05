@@ -1,5 +1,8 @@
 # Domoticz-get-http-data
 
+This html file placed in your domoticz server will give a value of your domoticz device as plain text. This can be used in other web based applications to use these values.
+
+Instruction:
 * Save getvalue.html file in domoticz/www/views
 * Change the line with $.domoticzurl="http://<IP-of-server>:<port>"; to the correct IP adress and port of your domoticz server
 * Use the following link http://<IP>:<port>/views/getvalue.html?idx=xxx&type=yyy to get the requested value as plain text
