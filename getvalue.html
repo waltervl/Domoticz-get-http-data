@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Use the following link http://<IP>:<port>/views/getvalue.html?idx=xxx&type=yyy to get the requested value as plain text -->
+<!-- idx is the idx number of the device -->
+<!-- type (case sensitive!) is the type of the requested value from the json of your idx device -->
+<!-- change line $.domoticzurl="http://<IP-of-server>:<port>" to match your domoticz  IP and port -->
+<meta charset="utf-8">
+<title>GetValue</title> 
+<script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+<style>
+div#cnt 
+</style>
+</head>
+<div id="iusage">--</div>
+<script type="text/javascript" charset="utf-8">
+function RefreshData()
+{
+	clearInterval($.refreshTimer);
+	var jurl=$.domoticzurl+"/json.htm?type=devices&rid="+$.getIDX;
+	$.getJSON(jurl,
+	{
+		format: "json"
+	},
+	function(data) {
+		if (typeof data.result != 'undefined') {
+			if (typeof data.WindSign != 'undefined') {
+				$('.windsign').html(data.WindSign);
+			}
+			if (typeof data.TempSign != 'undefined') {
+				$('.degsign').html(data.TempSign);
+			}
+			$.each(data.result, function(i,item) {
+					if( $.getIDX === item.idx ) {
+						var vdata=item[$.vtype];
+						if (typeof vdata == 'undefined') {
+							vdata="??";
+						}
+						else {
+							vdata=new String(vdata).split(" ",1)[0];
+						}
+						$('#iusage').html(vdata);
+					}
+			});
+		}
+	});
+	$.refreshTimer = setInterval(RefreshData, 10000);
+}
+function getAllUrlParams(url) {
+  var queryString = url ? url.split('?')[1] : window.location.search.slice(1);
+  var obj = {};
+
+  if (queryString) {
+    queryString = queryString.split('#')[0];
+    var arr = queryString.split('&');
+
+    for (var i = 0; i < arr.length; i++) {
+      var a = arr[i].split('=');
+      var paramName = a[0];
+      var paramValue = typeof (a[1]) === 'undefined' ? true : a[1];
+
+      //paramName = paramName.toLowerCase();
+      //if (typeof paramValue === 'string') paramValue = paramValue.toLowerCase();
+
+      if (paramName.match(/\[(\d+)?\]$/)) {
+        var key = paramName.replace(/\[(\d+)?\]/, '');
+        if (!obj[key]) obj[key] = [];
+
+        if (paramName.match(/\[\d+\]$/)) {
+          var index = /\[(\d+)\]/.exec(paramName)[1];
+          obj[key][index] = paramValue;
+        } else {
+          obj[key].push(paramValue);
+        }
+      } else {
+        if (!obj[paramName]) {
+          obj[paramName] = paramValue;
+        } else if (obj[paramName] && typeof obj[paramName] === 'string'){
+          obj[paramName] = [obj[paramName]];
+          obj[paramName].push(paramValue);
+        } else {
+          obj[paramName].push(paramValue);
+        }
+      }
+    }
+  }
+
+  return obj;
+}
+
+$(document).ready(function() {
+       // change next line to match your domoticz  IP and port
+	$.domoticzurl="http://<IP-of-server>:<port>";
+	$.getIDX = getAllUrlParams().idx;
+	$.vtype = getAllUrlParams().type;
+	
+    RefreshData();
+});  
+</script>
+
+</body>
+</html>
